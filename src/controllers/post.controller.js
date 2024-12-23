@@ -37,11 +37,21 @@ export const UpdatePost = async (req, res) => {
 
 export const ListAllPosts = async (req, res) => {
     try {
-        const {userId} = req.userId;
-        const posts = await postModel.find({postauthor: userId});
+        const posts = await postModel.find();
         return res.json(posts);
     } catch (error) {
         console.log("error @ListAllPosts-->postController.js");
+        return res.status(500).json({message: "Internal Server Error!"});
+    }
+}
+
+export const ListUserPosts = async (req, res) => {
+    try {
+        const {userId} = req.params;
+        const posts = await postModel.find({postauthor: userId});
+        return res.json(posts);
+    } catch (error) {
+        console.log("error @ListUserPosts-->postController.js");
         return res.status(500).json({message: "Internal Server Error!"});
     }
 }
