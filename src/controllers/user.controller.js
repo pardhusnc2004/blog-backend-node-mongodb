@@ -23,7 +23,7 @@ export const SignUp = async (req, res) => {
         })
         newUser.save();
         generateToken(newUser._id, res);
-        return res.status(201).json({message: "User registered successfully"});
+        return res.status(201).json({message: "User registered successfully", userId: newUser._id});
     } catch (error) {
         console.log("error @SignUp->userController.js", error.message)
         return res.status(500).json({message: "Internal Server Error!"});
@@ -37,12 +37,12 @@ export const Login = async (req, res) => {
         if(!validUser) {
             return res.status(404).json({message: "Invalid credentials"});
         }
-        const validPassword = bcryptjs.compare(userpassword, validUser.userpassword);
+        const validPassword = await bcryptjs.compare(userpassword, validUser.userpassword);
         if(!validPassword) {
             return res.status(404).json({message: "Invalid credentials"});
         }
         generateToken(validUser._id, res);
-        return res.status(200).json({message: "User logged in successfully"});
+        return res.status(200).json({message: "User logged in successfully", userId: validUser._id});
     } catch (error) {
         console.log("error @Login->userController.js", error.message)
         return res.status(500).json({message: "Internal Server Error!"});
